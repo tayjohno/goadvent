@@ -15,3 +15,8 @@ func Sum(integers []int) (sum int) {
 	}
 	return
 }
+
+// Mod returns the value of (a % b)
+func Mod(a int, b int) int {
+	return a - (a / b * b)
+}
