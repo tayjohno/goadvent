@@ -20,8 +20,6 @@ func PartOne() string {
 
 // PartTwo Solves the second part of day six of Advent of Code
 func PartTwo() int {
-
-	d, _ := disc.ImbalancedDisc(disc.ParseDisc(input.Raw))
-	disc.PrintDisc(*d, 0)
-	return 0
+	d := disc.ParseDisc(input.Raw)
+	return disc.FindNewWeight(&d)
 }

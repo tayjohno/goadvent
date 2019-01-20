@@ -6,7 +6,7 @@ func Example() {
 	main()
 	// Output:
 	// azqje
-	// -1
+	// 646
 }
 
 func TestPartOne(t *testing.T) {
@@ -16,7 +16,7 @@ func TestPartOne(t *testing.T) {
 }
 
 func TestPartTwo(t *testing.T) {
-	if PartTwo() != -1 {
-		t.Errorf("Answer was incorrect, got: %d, expected: %d.", PartTwo(), -1)
+	if PartTwo() != 646 {
+		t.Errorf("Answer was incorrect, got: %d, expected: %d.", PartTwo(), 646)
 	}
 }
