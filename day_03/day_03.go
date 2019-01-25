@@ -1,4 +1,4 @@
-package day
+package main
 
 import (
 	"adventofcode/day_03/one"
