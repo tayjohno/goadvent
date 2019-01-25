@@ -22,11 +22,12 @@ type definition struct {
 
 // Disc is a type used for day 7 representing a Disc in memory.
 type Disc struct {
-	Name       string
-	Weight     int
-	childNames []string
-	Children   []*Disc
-	parent     *Disc
+	Name        string
+	Weight      int
+	childNames  []string
+	Children    []*Disc
+	parent      *Disc
+	totalWeight int
 }
 
 type discDict map[string]*Disc
@@ -53,6 +54,7 @@ func buildTree(dict discDict) Disc {
 	}
 	for m := range dict {
 		if dict[m].parent == nil {
+			weigh(dict[m])
 			return *dict[m]
 		}
 	}
@@ -62,30 +64,64 @@ func buildTree(dict discDict) Disc {
 // PrintDisc prints out the contents of the disc
 func PrintDisc(disc Disc, depth int) {
 	fmt.Print(strings.Repeat("-", depth))
-	fmt.Printf("%s (%d)\n", disc.Name, disc.Weight)
+	fmt.Printf("%s (%d) (%d)\n", disc.Name, disc.Weight, disc.totalWeight)
 	for i := range disc.Children {
 		PrintDisc(*disc.Children[i], depth+1)
 	}
 }
 
-// ImbalancedDisc either returns a disc with an imbalance, or it returns the full weight.
-func ImbalancedDisc(disc Disc) (*Disc, int) {
-	weights := make([]int, len(disc.Children))
-	totalWeight := 0
+// FindNewWeight finds the imbalanced disc and returns the weight it should have. Needs at least 3
+// branches to know which one is wrong, and what the delta is
+func FindNewWeight(disc *Disc) int {
+	weigh(disc)
+	var goodWeight int
+	if disc.Children[0].totalWeight == disc.Children[1].totalWeight || disc.Children[0].totalWeight == disc.Children[2].totalWeight {
+		goodWeight = disc.Children[0].totalWeight
+	} else {
+		goodWeight = disc.Children[1].totalWeight
+	}
+	var badDisc *Disc
+	var delta int
 	for i := range disc.Children {
-		d, w := ImbalancedDisc(*disc.Children[i])
-		if d != nil {
-			return d, 0
-		}
-		weights[i] = w
-		totalWeight += w
-	}
-	for i := range weights {
-		if weights[i] != totalWeight/len(weights) {
-			return &disc, 0
+		if disc.Children[i].totalWeight != goodWeight {
+			badDisc = disc
+			delta = goodWeight - disc.Children[i].totalWeight
 		}
 	}
-	return nil, totalWeight + disc.Weight
+	return findNewWeightWithDelta(badDisc, delta)
+}
+
+func findNewWeightWithDelta(disc *Disc, delta int) int {
+	if isBalanced(disc) {
+		return disc.Weight + delta
+	}
+	// find disc off by delta
+	for i := 1; i < len(disc.Children); i++ {
+		if disc.Children[0].totalWeight-disc.Children[i].totalWeight == delta {
+			return findNewWeightWithDelta(disc.Children[i], delta)
+		}
+	}
+	return findNewWeightWithDelta(disc.Children[0], delta)
+}
+
+func isBalanced(disc *Disc) bool {
+	for i := 1; i < len(disc.Children); i++ {
+		if disc.Children[0].totalWeight != disc.Children[i].totalWeight {
+			return false
+		}
+	}
+	return true
+}
+
+func weigh(disc *Disc) int {
+	if disc.totalWeight > 0 {
+		return disc.totalWeight
+	}
+	disc.totalWeight = disc.Weight
+	for i := range disc.Children {
+		disc.totalWeight += weigh(disc.Children[i])
+	}
+	return disc.totalWeight
 }
 
 func parseDefinitions(s string) []definition {
