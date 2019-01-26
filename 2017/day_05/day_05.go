@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -44,18 +45,24 @@ func execute() int {
 func execute2() int {
 	i := stack{0, 0}
 	p := inputProgram()
+	l := len(p)
 	for {
-		if i.l >= len(p) {
+		if i.l >= l {
 			return i.n
 		}
 		tmpL := i.l
-		i = stack{i.l + p[i.l], i.n + 1}
-		if p[tmpL] >= 3 {
-			p[tmpL]--
-		} else {
-			p[tmpL]++
-		}
+		i = newStack(i, p)
+		overflow(p, tmpL)
 	}
+}
+
+func newStack(i stack, p program) stack {
+	return stack{i.l + p[i.l], i.n + 1}
+}
+
+func overflow(p program, l int) {
+	a := float64(p[l]) - 2.5
+	p[l] += -int(a / math.Abs(a))
 }
 
 func inputProgram() program {
