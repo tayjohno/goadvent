@@ -1,15 +1,14 @@
-package disc
+package main
 
 import (
-	"adventofcode/day_07/input"
 	"fmt"
 	"strconv"
 	"strings"
 )
 
 // ParseDisc returns the problem input for Day 7
-func ParseDisc(input string) Disc {
-	dict := defsToDiscDict(parseDefinitions(input))
+func ParseDisc(i string) Disc {
+	dict := defsToDiscDict(parseDefinitions(i))
 	return buildTree(dict)
 }
 
@@ -125,7 +124,7 @@ func weigh(disc *Disc) int {
 }
 
 func parseDefinitions(s string) []definition {
-	ss := strings.Split(input.Raw, "\n")
+	ss := strings.Split(input, "\n")
 	d := make([]definition, len(ss))
 	for i := range ss {
 		d[i] = parseDefinition(ss[i])

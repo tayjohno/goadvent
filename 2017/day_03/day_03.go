@@ -1,8 +1,8 @@
 package main
 
 import (
-	"adventofcode/day_03/one"
-	"adventofcode/day_03/two"
+	"adventofcode/2017/day_03/one"
+	"adventofcode/2017/day_03/two"
 	"fmt"
 )
 
