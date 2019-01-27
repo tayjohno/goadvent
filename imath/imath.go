@@ -20,3 +20,19 @@ func Sum(integers []int) (sum int) {
 func Mod(a int, b int) int {
 	return a - (a / b * b)
 }
+
+// Min returns the smaller of two integers
+func Min(a int, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+// Max returns the larger of two integers
+func Max(a int, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
